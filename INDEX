@@ -1,0 +1,15 @@
+AAAlignment-class       "AAAlignment" result of pairwise sequence
+                        alignment.
+AAAlphabet-class        Class "AAAlphabet" Amino Acid Alphabet
+AASequence              AASequence constructor
+AASequence-class        "AASequence" Object representation of a
+                        protein Sequence
+AASequenceList-class    Class "AASequenceList" - Container
+EPAM110                 Amino Acid Substitution matrices
+Submatrix-class         Class "Submatrix" Substitution Matrix
+listdist-methods        Compute distance matrix from a list
+readFasta-methods       reader for databases in Fasta file format.
+salign-methods          Optimal pairwise alignment of two protein
+                        sequences.
+sequlist                AASequenceList with 66 entries.
+testalign-methods       Scoring of optimal alingments.

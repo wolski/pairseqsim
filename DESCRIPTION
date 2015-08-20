@@ -1,0 +1,12 @@
+Package: pairseqsim
+Version: 1.8.0
+Title: pairwise sequence alignment similarity simple.
+Author: Witold Wolski <witek96@users.sourceforge.net>
+Maintainer: Witold Wolski <witek96@users.sourceforge.net>
+Description: Pairwise sequence alignment and scoring algorithms for
+        global,local and overlap alignement with affine gap penalty.
+License: LGPL
+Depends: methods, stats
+URL: http://www.bioconductor.org
+biocViews: Genetics, Statistics
+Packaged: Tue Oct  3 14:05:44 2006; biocbuild

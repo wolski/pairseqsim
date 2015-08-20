@@ -1,0 +1,147 @@
+%\VignetteIndexEntry{Low level analysis of MALDI-TOF Peptide Mass Fingerprint data}
+%\VignetteDepends{modreg}
+
+\documentclass{article}
+
+\title{R/pairseqsim \\{\bf Pair}wise {\bf Seq}uence {\bf Sim}ilarity / {\bf Sim}ple
+\\
+comparison of scores.}
+\author{Witold Eryk Wolski}
+
+\begin{document}
+
+\maketitle
+\setkeys{Gin}{width=0.7\textwidth}
+
+
+\section{Comparison of distance measures for sequences}
+Before we start we need to load the library:
+<<ReadData,eval=T>>=
+library(pairseqsim)
+data(EPAM110)
+mySequlist <- new("AASequenceList",info="my sequence list")
+fdat <- system.file("test", package="pairseqsim")
+mySequlist <- readFasta(mySequlist,paste(fdat,"ex.fasta",sep="/"),grepinfo=infogrep,grepseq=seqgrep)
+length(mySequlist)
+@
+
+To compare the distance measures we are going to compute all pairwise distances of 66 arbitrary protein sequences. 
+Then we draw scatter-plots. From the scatter-plots it can be seen that the distance measures have different properties.
+
+\section{Global alignment}
+
+We compute the distance matrix using different scores but keeping the other conditions constant.
+
+<<GLOBALALIG,eval=T>>=
+gpoz <- salign(mySequlist,NULL,EPAM110,alignment="global",scoring = "pozitive")
+gscor<- salign(mySequlist,NULL,EPAM110,alignment="global",scoring = "score")
+gide <- salign(mySequlist,NULL,EPAM110,alignment="global",scoring = "identity")
+gsim <- salign(mySequlist,NULL,EPAM110,alignment="global",scoring = "similarity")
+gscorN <- salign(mySequlist,NULL,EPAM110,alignment="global",scoring = "scoreN")
+
+@
+
+<<PLOTGLOB,fig=TRUE,width=5,height=8>>=
+par(mfrow=c(3,2))
+plot(gpoz,gscor,xlab=expression(P(X>Z[pozitive])),ylab=expression(P(X>Z[score])),pch="*")
+plot(gide,gsim,xlab=expression(1-frac(identity,min(length(seq)))) ,ylab=expression(1-similarity/min(length(seq))),pch="*")
+plot(gide,gscor,xlab=expression(1-frac(identity,min(length(seq)))) ,ylab=expression(P(X>Z[score])),pch="*")
+plot(gide,gpoz,xlab=expression(1-frac(identity,min(length(seq)))) ,ylab=expression(P(X>Z[pozitive])),pch="*")
+plot(gscorN,gpoz,xlab=expression(SW[N]),ylab=expression(P(X>=Z[score])),pch="*")
+plot(gsim,gpoz,xlab=expression(1-similarity/min(length(seq))),ylab=expression(P(X>Z[pozitive])),pch="*")
+
+@ 
+
+
+\section{Overlap alignment}
+
+Test the overlap alignment.
+
+<<OVERLAPALIG,eval=T>>=
+opoz <- salign(mySequlist,NULL,EPAM110,alignment="overlap",scoring = "pozitive")
+oscor<- salign(mySequlist,NULL,EPAM110,alignment="overlap",scoring = "score")
+oide <- salign(mySequlist,NULL,EPAM110,alignment="overlap",scoring = "identity")
+osim <- salign(mySequlist,NULL,EPAM110,alignment="overlap",scoring = "similarity")
+oscorN <- salign(mySequlist,NULL,EPAM110,alignment="overlap",scoring = "scoreN")
+
+@ 
+
+To compare the distances for overlap alignement we prepare scatter-plots.
+
+<<PLOTOVERLAP,fig=TRUE,height=8,width=5>>=
+par(mfrow=c(3,2))
+plot(opoz,oscor,xlab=expression(P(X>Z[pozitive])),ylab=expression(P(X>Z[score])),pch="*")
+plot(oide,osim,xlab=expression(1-frac(identity,min(length(seq)))) ,ylab=expression(1-similarity/min(length(seq))),pch="*")
+plot(oscorN,opoz,xlab=expression(SW[N]),ylab=expression(P(X>=Z[score])),pch="*")
+plot(osim,opoz,xlab=expression(1-similarity/min(length(seq))),ylab=expression(P(X>Z[pozitive])),pch="*")
+plot(oide , opoz , xlab=expression(1-identity/min(length(seq))) , ylab=expression(P(X>Z[pozitive])) , pch="*")
+plot(oide , oscorN , xlab=expression(1-identity/min(length(seq))) , ylab=expression(SW[N]), pch="*")
+
+@
+
+\section{Local Alignment}
+
+To compare the distances for local alignment we prepare scatter-plots.
+
+<<LOCAL,eval=T>>=
+lpoz <- salign(mySequlist,NULL,EPAM110,alignment="local",scoring = "pozitive")
+lscor <- salign(mySequlist,NULL,EPAM110,alignment="local",scoring = "score")
+lide <- salign(mySequlist,NULL,EPAM110,alignment="local",scoring = "identity")
+lsim <- salign(mySequlist,NULL,EPAM110,alignment="local",scoring = "similarity")
+lscorN <- salign(mySequlist,NULL,EPAM110,alignment="local",scoring = "scoreN")
+
+@ 
+
+<<PLOTLOCAL,fig=TRUE,height=8,width=5>>=
+par(mfrow=c(3,2))
+plot(lpoz,lscor,xlab=expression(P(X>Z[pozitive])),ylab=expression(P(X>Z[score])),pch="*")
+plot(lide,lsim,xlab=expression(1-frac(identity,min(length(seq)))) ,ylab=expression(1-similarity/min(length(seq))),pch="*")
+plot(lscorN,lpoz,xlab=expression(SW[N]),ylab=expression(P(X>=Z[score])),pch="*")
+plot(lsim,lpoz,xlab=expression(1-similarity/min(length(seq))),ylab=expression(P(X>Z[pozitive])),pch="*")
+plot(lide , lpoz , xlab=expression(1-identity/min(length(seq))) , ylab=expression(P(X>Z[pozitive])) , pch="*")
+plot(lide , lscorN , xlab=expression(1-identity/min(length(seq))) , ylab=expression(SW[N]), pch="*")
+
+@
+
+\section{Comparing Scores for different types of alignment}
+
+
+<<COMPAREALIG,fig=TRUE,height=8,width=5>>=
+par(mfrow=c(3,2))
+plot(gide, oide,main=expression(1-identity/min(length(seq))),xlab="global",ylab="overlap",pch="*")
+plot(gpoz, opoz,main=expression(P(X>Z[pozitive])),xlab="global",ylab="overlap",pch="*")
+plot(gsim, osim,main=expression(1-similarity/min(length(seq))),xlab="global",ylab="overlap",pch="*")
+plot(gscorN, oscorN,main=expression(SW[N]),xlab="global",ylab="overlap",pch="*")
+plot(gscor,oscor,main=expression(P(X>Z[score])),xlab="global",ylab="overlap",pch="*")
+
+@
+
+In addition we are interested in the distribution of the pozitive and z-score. They both should be normally distributed. To test it we draw the qqplot.
+
+<<eval=T>>=
+scoO <- listdist(mySequlist,testalign,diag=F,EPAM110,alignment="overlap",scoring="score")
+pozO <- listdist(mySequlist,testalign,diag=F,EPAM110,alignment="overlap",scoring="pozitive")
+scoL <- listdist(mySequlist,testalign,diag=F,EPAM110,alignment="local",scoring="score")
+pozL <- listdist(mySequlist,testalign,diag=F,EPAM110,alignment="local",scoring="pozitive")
+scoG <- listdist(mySequlist,testalign,diag=F,EPAM110,alignment="global",scoring="score")
+pozG <- listdist(mySequlist,testalign,diag=F,EPAM110,alignment="global",scoring="pozitive")
+
+@
+
+
+<<fig=TRUE,height=8,width=5>>=
+par(mfrow=c(3,2))
+library(car)
+qq.plot(as.numeric(scoO),main="SW score (overlap)",ylab="z-score",pch="*",col=1)
+qq.plot(as.numeric(pozO),main="Pozitive Score (overlap)",ylab="pozitive",pch="*",col=1)
+qq.plot(as.numeric(scoL),main="SW score (local)",pch="*",ylab="z-score",col=1)
+qq.plot(as.numeric(pozL),main="Pozitive Score (local)",ylab="pozitive",pch="*",col=1)
+qq.plot(as.numeric(scoG),main="SW score (lobal)",pch="*",ylab="z-score",col=1)
+qq.plot(as.numeric(pozG),main="Pozitive Score (global)",ylab="pozitive",pch="*",col=1)
+
+@ 
+
+We see that both the z-score and the pozitive score are not normally distributed.
+
+
+\end{document}

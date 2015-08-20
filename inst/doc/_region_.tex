@@ -1,0 +1,23 @@
+\message{ !name(SamplesSession.Rnw)}%\VignetteIndexEntry{Pairwise Sequence Similarity Simple}
+%\VignetteDepends{}
+%\VignetteKeywords{Sequence analysis}
+%\VignettePackage{pairseqsim}
+
+\documentclass{article}
+
+\title{Pairwise Sequence Similarity Simple}
+\author{Witold Eryk Wolski}
+
+\begin{document}
+{\makeatletter\gdef\AucTeX@cite#1[#2]#3{[#3#1#2]}\gdef\cite{\@ifnextchar[{\AucTeX@cite{, }}{\AucTeX@cite{}[]}}}
+
+\message{ !name(SamplesSession.Rnw) !offset(57) }
+infogrep <- function(x)
+  {
+    return(sub("^>([a-zA-Z0-9]+) .+","\\1",x,perl=TRUE))
+  }
+
+\message{ !name(SamplesSession.Rnw) !offset(213) }
+
+\end{document}
+
